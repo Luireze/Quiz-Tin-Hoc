@@ -30,16 +30,86 @@
 
 <script>
 const questions = [
-  { q: "Phần mềm máy tính là gì?", answers: ["Chuột", "Bàn phím", "Màn hình", "Chương trình máy tính"], correct: 3 },
-  { q: "Phần mềm máy tính dùng để làm gì?", answers: ["Trang trí máy tính", "Điều khiển hoạt động của máy tính", "Làm mát máy", "Cung cấp điện"], correct: 1 },
-  { q: "Văn bản có thể chứa những loại thông tin nào?", answers: ["Chữ", "Hình ảnh", "Âm thanh", "Chữ, hình ảnh, âm thanh, video, siêu liên kết"], correct: 3 },
-  { q: "Tác hại khi xem trang web có nội dung xấu là gì?", answers: ["Giải trí lành mạnh", "Học tập tốt hơn", "Ảnh hưởng xấu đến nhận thức", "Không ảnh hưởng"], correct: 2 },
-  { q: "Để đổi tên một tệp hoặc thư mục, em dùng lệnh nào?", answers: ["Delete", "Copy", "Rename", "Cut"], correct: 2 },
-  { q: "Để sao chép tệp hoặc thư mục, em dùng lệnh nào?", answers: ["Copy", "Cut", "Rename", "Delete"], correct: 0 },
-  { q: "Để di chuyển tệp hoặc thư mục, em dùng lệnh nào?", answers: ["Copy", "Rename", "Cut", "Delete"], correct: 2 },
-  { q: "Lệnh Delete dùng để làm gì?", answers: ["Sao chép", "Di chuyển", "Xóa", "Đổi tên"], correct: 2 },
-  { q: "Phần mềm miễn phí là phần mềm như thế nào?", answers: ["Phải trả tiền", "Không phải trả phí", "Chỉ dùng 1 lần", "Chỉ dùng 1 năm"], correct: 1 },
-  { q: "Khi di chuyển tệp sang thư mục khác thì tệp sẽ:", answers: ["Tồn tại ở 2 nơi", "Chỉ ở vị trí cũ", "Chỉ ở vị trí mới", "Bị xóa"], correct: 2 }
+  {
+    q: "Câu 1: Phần cứng máy tính là thành phần nào sau đây?",
+    answers: [
+      "Word, PowerPoint, micro",
+      "Bộ vi xử lí CPU, RAM, bộ nguồn",
+      "Google, Cốc Cốc, bàn phím",
+      "Paint, Scratch 3, Chat GPT"
+    ],
+    correct: 1
+  },
+  {
+    q: "Câu 2: Phần mềm máy tính là thành phần nào sau đây?",
+    answers: [
+      "Màn hình, webcam",
+      "Bộ vi xử lí CPU",
+      "Google, PowerPoint",
+      "Màn hình, tai nghe"
+    ],
+    correct: 2
+  },
+  {
+    q: "Câu 3: Văn bản chứa các loại thông tin văn bản, hình ảnh, âm thanh, video và siêu liên kết gọi là gì?",
+    answers: [
+      "Siêu văn bản",
+      "Siêu âm thanh",
+      "Trang web",
+      "Siêu hình ảnh"
+    ],
+    correct: 0
+  },
+  {
+    q: "Câu 4: Tác hại khi xem các trang web có các trò chơi, phim, ảnh bạo lực?",
+    answers: [
+      "Em sẽ bị lôi cuốn và vô tình làm theo những hành vi không đúng mực với mọi người",
+      "Em đã thực hiện hành vi sai trái và máy tính của em có nguy cơ bị nhiễm virus độc hại",
+      "Em có thể bị bắt nạt trực tuyến hoặc bị lừa đảo dẫn đến mất tiền bạc",
+      "Em có thể học hỏi và trải nghiệm thêm nhiều trò chơi bắn súng mới lạ"
+    ],
+    correct: 0
+  },
+  {
+    q: "Câu 5: Để đổi tên một thư mục, em dùng lệnh nào sau đây?",
+    answers: ["Delete", "Copy", "Rename", "Cut"],
+    correct: 2
+  },
+  {
+    q: "Câu 6: Để di chuyển một thư mục, em dùng lệnh nào sau đây?",
+    answers: ["Copy", "Rename", "Cut", "Delete"],
+    correct: 2
+  },
+  {
+    q: "Câu 7: Để tạo một thư mục, em dùng lệnh nào sau đây?",
+    answers: ["New folder", "New slide", "New", "New Layout"],
+    correct: 0
+  },
+  {
+    q: "Câu 8: Phần mềm miễn phí là gì?",
+    answers: [
+      "Phần mềm phải mất phí khi sử dụng",
+      "Phần mềm thu phí theo tháng",
+      "Phần mềm không phải trả phí khi sử dụng",
+      "Phần mềm dùng thu phí theo năm"
+    ],
+    correct: 2
+  },
+  {
+    q: "Câu 9: Khi di chuyển một thư mục đến vị trí khác thì tất cả tệp và thư mục con trong thư mục đó sẽ như thế nào?",
+    answers: [
+      "Tồn tại ở cả vị trí mới và vị trí cũ",
+      "Chỉ tồn tại ở vị trí cũ",
+      "Chỉ tồn tại ở vị trí mới",
+      "Bị xóa đi không còn tồn tại"
+    ],
+    correct: 2
+  },
+  {
+    q: "Câu 10: Khi em muốn tệp và thư mục tồn tại ở thư mục cũ và thư mục mới em sử dụng một thao tác nào?",
+    answers: ["Sao chép", "Di chuyển", "Xóa", "Đổi tên"],
+    correct: 0
+  }
 ];
 
 function shuffle(arr) {
