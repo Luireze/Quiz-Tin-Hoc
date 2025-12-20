@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trắc nghiệm Tin Học Lớp 4</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; }
+    #history { width: 25%; background: #f3f3f3; padding: 10px; overflow-y: auto; border-right: 1px solid #ccc; }
+    #quiz { flex: 1; padding: 20px; overflow-y: auto; }
+    .question { margin-bottom: 20px; }
+    .answers button { display: block; margin: 5px 0; width: 100%; padding: 8px; cursor: pointer; }
+    .answers button.selected { background-color: #d0ebff; border: 2px solid #339af0; }
+    .correct { color: green; }
+    .wrong { color: red; }
+  </style>
+</head>
+<body>
+
+<div id="history">
+  <h3>Lịch sử làm bài</h3>
+  <ul id="historyList"></ul>
+</div>
+
+<div id="quiz">
+  <h2>Đề trắc nghiệm Tin Học lớp 4</h2>
+  <div id="questionBox"></div>
+  <button onclick="submitQuiz()">Nộp bài</button>
+  <p id="score"></p>
+</div>
+
+<script>
+const questions = [
+  { q: "Phần mềm máy tính là gì?", answers: ["Chuột", "Bàn phím", "Màn hình", "Chương trình máy tính"], correct: 3 },
+  { q: "Phần mềm máy tính dùng để làm gì?", answers: ["Trang trí máy tính", "Điều khiển hoạt động của máy tính", "Làm mát máy", "Cung cấp điện"], correct: 1 },
+  { q: "Văn bản có thể chứa những loại thông tin nào?", answers: ["Chữ", "Hình ảnh", "Âm thanh", "Chữ, hình ảnh, âm thanh, video, siêu liên kết"], correct: 3 },
+  { q: "Tác hại khi xem trang web có nội dung xấu là gì?", answers: ["Giải trí lành mạnh", "Học tập tốt hơn", "Ảnh hưởng xấu đến nhận thức", "Không ảnh hưởng"], correct: 2 },
+  { q: "Để đổi tên một tệp hoặc thư mục, em dùng lệnh nào?", answers: ["Delete", "Copy", "Rename", "Cut"], correct: 2 },
+  { q: "Để sao chép tệp hoặc thư mục, em dùng lệnh nào?", answers: ["Copy", "Cut", "Rename", "Delete"], correct: 0 },
+  { q: "Để di chuyển tệp hoặc thư mục, em dùng lệnh nào?", answers: ["Copy", "Rename", "Cut", "Delete"], correct: 2 },
+  { q: "Lệnh Delete dùng để làm gì?", answers: ["Sao chép", "Di chuyển", "Xóa", "Đổi tên"], correct: 2 },
+  { q: "Phần mềm miễn phí là phần mềm như thế nào?", answers: ["Phải trả tiền", "Không phải trả phí", "Chỉ dùng 1 lần", "Chỉ dùng 1 năm"], correct: 1 },
+  { q: "Khi di chuyển tệp sang thư mục khác thì tệp sẽ:", answers: ["Tồn tại ở 2 nơi", "Chỉ ở vị trí cũ", "Chỉ ở vị trí mới", "Bị xóa"], correct: 2 }
+];
+
+function shuffle(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+let shuffledQuestions = [];
+
+function loadQuiz() {
+  shuffledQuestions = shuffle([...questions]).map(q => {
+    const ans = q.answers.map((a, i) => ({ text: a, index: i }));
+    return { ...q, shuffledAns: shuffle(ans) };
+  });
+
+  const box = document.getElementById("questionBox");
+  box.innerHTML = "";
+
+  shuffledQuestions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `<b>Câu ${i+1}:</b> ${q.q}`;
+
+    const ansDiv = document.createElement("div");
+    ansDiv.className = "answers";
+
+    q.shuffledAns.forEach(a => {
+      const btn = document.createElement("button");
+      btn.textContent = a.text;
+      btn.dataset.index = a.index;
+      btn.onclick = () => {
+        ansDiv.querySelectorAll("button").forEach(b => {
+          b.classList.remove("selected");
+          delete b.dataset.selected;
+        });
+        btn.classList.add("selected");
+        btn.dataset.selected = "true";
+      };
+      ansDiv.appendChild(btn);
+    });
+
+    div.appendChild(ansDiv);
+    box.appendChild(div);
+  });
+}
+
+function submitQuiz() {
+  let score = 0;
+  document.querySelectorAll(".question").forEach((div, i) => {
+    div.querySelectorAll("button").forEach(btn => {
+      if (btn.dataset.selected === "true") {
+        if (parseInt(btn.dataset.index) === shuffledQuestions[i].correct) {
+          score++;
+          btn.classList.add("correct");
+        } else {
+          btn.classList.add("wrong");
+        }
+      }
+    });
+  });
+
+  document.getElementById("score").textContent = `Điểm: ${score}/${shuffledQuestions.length}`;
+  const li = document.createElement("li");
+  li.textContent = `Lần ${document.querySelectorAll("#historyList li").length + 1}: ${score}/${shuffledQuestions.length}`;
+  document.getElementById("historyList").appendChild(li);
+}
+
+loadQuiz();
+</script>
+</body>
+</html>
