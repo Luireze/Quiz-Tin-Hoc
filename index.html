@@ -1,182 +1,237 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Trắc nghiệm Tin Học Lớp 4</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; }
-    #history { width: 25%; background: #f3f3f3; padding: 10px; overflow-y: auto; border-right: 1px solid #ccc; }
-    #quiz { flex: 1; padding: 20px; overflow-y: auto; }
-    .question { margin-bottom: 20px; }
-    .answers button { display: block; margin: 5px 0; width: 100%; padding: 8px; cursor: pointer; }
-    .answers button.selected { background-color: #d0ebff; border: 2px solid #339af0; }
-    .correct { color: green; }
-    .wrong { color: red; }
-  </style>
+<meta charset="UTF-8">
+<title>Quà bí mật cho em ❤️</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+    display:flex;
+}
+
+/* Left main area */
+.main{
+    flex:1;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+h1{
+    margin-top:20px;
+    color:white;
+}
+
+/* History sidebar */
+.history{
+    width:260px;
+    background:white;
+    padding:15px;
+    overflow-y:auto;
+    box-shadow:-5px 0 15px rgba(0,0,0,0.2);
+}
+
+.history h2{
+    margin-top:0;
+}
+
+.history-item{
+    background:#ffe6ea;
+    padding:8px;
+    margin-bottom:8px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.history-item:hover{
+    background:#ffccd5;
+}
+
+.clear-btn{
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    margin-bottom:10px;
+}
+
+/* Gift grid */
+.container{
+    display:grid;
+    grid-template-columns:repeat(3,120px);
+    gap:20px;
+    justify-content:center;
+    margin-top:80px;
+    z-index:2;
+}
+
+.gift{
+    width:120px;
+    height:120px;
+    background:gold;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:50px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.gift:hover{
+    transform:scale(1.1);
+}
+
+.popup{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    font-size:22px;
+    display:none;
+    z-index:5;
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
+}
+
+.heart{
+    position:fixed;
+    color:red;
+    font-size:20px;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{transform:translateY(-10vh);opacity:1;}
+    100%{transform:translateY(110vh);opacity:0;}
+}
+</style>
 </head>
+
 <body>
 
-<div id="history">
-  <h3>Lịch sử làm bài</h3>
-  <ul id="historyList"></ul>
+<div class="main">
+<h1>🎁 Chọn 1 hộp quà đi em 🎁</h1>
+<div class="container" id="container"></div>
+<div class="popup" id="popup"></div>
 </div>
 
-<div id="quiz">
-  <h2>Đề trắc nghiệm Tin Học lớp 4</h2>
-  <div id="questionBox"></div>
-  <button onclick="submitQuiz()">Nộp bài</button>
-  <p id="score"></p>
+<div class="history">
+    <h2>📜 Lịch sử</h2>
+    <button class="clear-btn" onclick="clearHistory()"></button>
+    <div id="historyList"></div>
 </div>
 
 <script>
-const questions = [
-  {
-    q: "Câu 1: Phần cứng máy tính là thành phần nào sau đây?",
-    answers: [
-      "Word, PowerPoint, micro",
-      "Bộ vi xử lí CPU, RAM, bộ nguồn",
-      "Google, Cốc Cốc, bàn phím",
-      "Paint, Scratch 3, Chat GPT"
-    ],
-    correct: 1
-  },
-  {
-    q: "Câu 2: Phần mềm máy tính là thành phần nào sau đây?",
-    answers: [
-      "Màn hình, webcam",
-      "Bộ vi xử lí CPU",
-      "Google, PowerPoint",
-      "Màn hình, tai nghe"
-    ],
-    correct: 2
-  },
-  {
-    q: "Câu 3: Văn bản chứa các loại thông tin văn bản, hình ảnh, âm thanh, video và siêu liên kết gọi là gì?",
-    answers: [
-      "Siêu văn bản",
-      "Siêu âm thanh",
-      "Trang web",
-      "Siêu hình ảnh"
-    ],
-    correct: 0
-  },
-  {
-    q: "Câu 4: Tác hại khi xem các trang web có các trò chơi, phim, ảnh bạo lực?",
-    answers: [
-      "Em sẽ bị lôi cuốn và vô tình làm theo những hành vi không đúng mực với mọi người",
-      "Em đã thực hiện hành vi sai trái và máy tính của em có nguy cơ bị nhiễm virus độc hại",
-      "Em có thể bị bắt nạt trực tuyến hoặc bị lừa đảo dẫn đến mất tiền bạc",
-      "Em có thể học hỏi và trải nghiệm thêm nhiều trò chơi bắn súng mới lạ"
-    ],
-    correct: 0
-  },
-  {
-    q: "Câu 5: Để đổi tên một thư mục, em dùng lệnh nào sau đây?",
-    answers: ["Delete", "Copy", "Rename", "Cut"],
-    correct: 2
-  },
-  {
-    q: "Câu 6: Để di chuyển một thư mục, em dùng lệnh nào sau đây?",
-    answers: ["Copy", "Rename", "Cut", "Delete"],
-    correct: 2
-  },
-  {
-    q: "Câu 7: Để tạo một thư mục, em dùng lệnh nào sau đây?",
-    answers: ["New folder", "New slide", "New", "New Layout"],
-    correct: 0
-  },
-  {
-    q: "Câu 8: Phần mềm miễn phí là gì?",
-    answers: [
-      "Phần mềm phải mất phí khi sử dụng",
-      "Phần mềm thu phí theo tháng",
-      "Phần mềm không phải trả phí khi sử dụng",
-      "Phần mềm dùng thu phí theo năm"
-    ],
-    correct: 2
-  },
-  {
-    q: "Câu 9: Khi di chuyển một thư mục đến vị trí khác thì tất cả tệp và thư mục con trong thư mục đó sẽ như thế nào?",
-    answers: [
-      "Tồn tại ở cả vị trí mới và vị trí cũ",
-      "Chỉ tồn tại ở vị trí cũ",
-      "Chỉ tồn tại ở vị trí mới",
-      "Bị xóa đi không còn tồn tại"
-    ],
-    correct: 2
-  },
-  {
-    q: "Câu 10: Khi em muốn tệp và thư mục tồn tại ở thư mục cũ và thư mục mới em sử dụng một thao tác nào?",
-    answers: ["Sao chép", "Di chuyển", "Xóa", "Đổi tên"],
-    correct: 0
-  }
+const gifts=[
+"Combo 200k + 1 món tùy thích ở net",
+"350k",
+"Combo 150k + 1 món tùy thích ở net",
+"300k",
+"400k",
+"500k",
+"Chúc bạn may mắn lần sau",
+"200k",
+"250k"
 ];
 
-function shuffle(arr) {
-  return arr.sort(() => Math.random() - 0.5);
-}
+gifts.sort(()=>0.5-Math.random());
 
-let shuffledQuestions = [];
+const container=document.getElementById("container");
+const popup=document.getElementById("popup");
+const historyList=document.getElementById("historyList");
 
-function loadQuiz() {
-  shuffledQuestions = shuffle([...questions]).map(q => {
-    const ans = q.answers.map((a, i) => ({ text: a, index: i }));
-    return { ...q, shuffledAns: shuffle(ans) };
-  });
-
-  const box = document.getElementById("questionBox");
-  box.innerHTML = "";
-
-  shuffledQuestions.forEach((q, i) => {
-    const div = document.createElement("div");
-    div.className = "question";
-    div.innerHTML = `<b>Câu ${i+1}:</b> ${q.q}`;
-
-    const ansDiv = document.createElement("div");
-    ansDiv.className = "answers";
-
-    q.shuffledAns.forEach(a => {
-      const btn = document.createElement("button");
-      btn.textContent = a.text;
-      btn.dataset.index = a.index;
-      btn.onclick = () => {
-        ansDiv.querySelectorAll("button").forEach(b => {
-          b.classList.remove("selected");
-          delete b.dataset.selected;
-        });
-        btn.classList.add("selected");
-        btn.dataset.selected = "true";
-      };
-      ansDiv.appendChild(btn);
-    });
-
-    div.appendChild(ansDiv);
-    box.appendChild(div);
-  });
-}
-
-function submitQuiz() {
-  let score = 0;
-  document.querySelectorAll(".question").forEach((div, i) => {
-    div.querySelectorAll("button").forEach(btn => {
-      if (btn.dataset.selected === "true") {
-        if (parseInt(btn.dataset.index) === shuffledQuestions[i].correct) {
-          score++;
-          btn.classList.add("correct");
-        } else {
-          btn.classList.add("wrong");
+for(let i=0;i<9;i++){
+    const div=document.createElement("div");
+    div.className="gift";
+    div.innerHTML="🎁";
+    div.onclick=function(){
+        const gift=gifts[i];
+        showResult(gift);
+        saveHistory(gift);
+        if(gift.includes("300")||gift.includes("400")||gift.includes("500")){
+            launchFireworks();
         }
-      }
-    });
-  });
-
-  document.getElementById("score").textContent = `Điểm: ${score}/${shuffledQuestions.length}`;
-  const li = document.createElement("li");
-  li.textContent = `Lần ${document.querySelectorAll("#historyList li").length + 1}: ${score}/${shuffledQuestions.length}`;
-  document.getElementById("historyList").appendChild(li);
+    };
+    container.appendChild(div);
 }
 
-loadQuiz();
+function showResult(gift){
+    popup.style.display="block";
+    popup.innerHTML="💖 Bạn đã trúng:<br><br><b>"+gift+"</b>";
+}
+
+function saveHistory(gift){
+    const time=new Date().toLocaleString();
+    const record={gift,time};
+
+    let history=JSON.parse(localStorage.getItem("history"))||[];
+    history.unshift(record);
+    localStorage.setItem("history",JSON.stringify(history));
+
+    renderHistory();
+}
+
+function renderHistory(){
+    historyList.innerHTML="";
+    let history=JSON.parse(localStorage.getItem("history"))||[];
+
+    history.forEach((item,index)=>{
+        const div=document.createElement("div");
+        div.className="history-item";
+        div.innerHTML=`${item.time}<br><b>${item.gift}</b>`;
+        div.onclick=function(){
+            showResult(item.gift);
+        };
+        historyList.appendChild(div);
+    });
+}
+
+function clearHistory(){
+    localStorage.removeItem("history");
+    renderHistory();
+}
+
+renderHistory();
+
+/* Hearts */
+setInterval(()=>{
+    const heart=document.createElement("div");
+    heart.className="heart";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=(Math.random()*3+2)+"s";
+    heart.innerHTML="❤️";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),5000);
+},300);
+
+/* Fireworks */
+function launchFireworks(){
+    for(let i=0;i<80;i++){
+        const fw=document.createElement("div");
+        fw.style.position="fixed";
+        fw.style.width="5px";
+        fw.style.height="5px";
+        fw.style.borderRadius="50%";
+        fw.style.left="50%";
+        fw.style.top="50%";
+        fw.style.background="hsl("+Math.random()*360+",100%,50%)";
+        fw.style.transform=`translate(${Math.random()*400-200}px,${Math.random()*400-200}px)`;
+        fw.style.opacity="0";
+        fw.style.transition="1s";
+        document.body.appendChild(fw);
+        setTimeout(()=>fw.remove(),1000);
+    }
+}
 </script>
+
 </body>
 </html>
